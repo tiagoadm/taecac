@@ -31,7 +31,7 @@ begin
 					else
 						curpath := curpath || ':' || curitem;
 					end if;
-				else if exists (select 1 from fp where item = curitem and path = curpath) then
+				elsif exists (select 1 from fp where item = curitem and path = curpath) then
 					update fp set cnt = cnt+1 where item = curitem and path = curpath;
 					commit;
 					if curpath is null then
@@ -47,8 +47,7 @@ begin
 					else
 						curpath := curpath || ':' || curitem;
 					end if;
-				end if;
-				end if;		
+				end if;	
 			end loop;
 		end if;
 	end loop;
