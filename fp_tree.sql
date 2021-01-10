@@ -1,3 +1,26 @@
+--FP table with window functions - very fast!
+create materialized view fp as
+with t as (
+	select tid, 
+		item, 
+		lag(item,1) over (partition by tid order by item_order) as previous_item, 
+		item_order 
+	from t_2
+),
+efp as (
+	select item, 
+		string_agg(coalesce(previous_item,'null'), ':') over (partition by tid order by item_order) path
+	from t	select item, string_agg(coalesce(previous_item,'null'), ':') over (partition by tid order by item_order) path
+	from t
+)
+select item, 
+	path, 
+	count(1) as cnt
+from efp
+group by item, path
+order by 3 desc;
+
+--PL-PGSQL alternative - slow
 create or replace procedure build_fp() language plpgsql as $$
 declare
 	curpath text;
