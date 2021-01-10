@@ -10,7 +10,6 @@ with t as (
 efp as (
 	select item, 
 		string_agg(coalesce(previous_item,'null'), ':') over (partition by tid order by item_order) path
-	from t	select item, string_agg(coalesce(previous_item,'null'), ':') over (partition by tid order by item_order) path
 	from t
 )
 select item, 
